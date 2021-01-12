@@ -1,0 +1,7 @@
+{
+  "name": "matherm-app",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react"
+}
