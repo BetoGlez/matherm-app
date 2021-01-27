@@ -1,16 +1,45 @@
-import React from "react";
-import { IonCol, IonContent, IonFooter, IonGrid, IonIcon, IonPage, IonRow} from "@ionic/react";
+import React, { useState, useEffect } from "react";
+import { IonCol, IonContent, IonFooter, IonGrid, IonIcon, IonPage, IonRow, IonToast} from "@ionic/react";
 import { powerOutline } from "ionicons/icons";
 import "./Home.scss";
+import axios from "axios";
 import useDatabase from "../hooks/useRealtimeDatabase";
+import { MathermInputPayload, MathermState } from "../models/matherm-state.model";
+import { AppConfig } from "../app.constants";
 
 const Home: React.FC = () => {
     const { mathermState } = useDatabase();
+    const [ mathermToastMsg, setMathermToastMsg ] = useState("");
+
+    useEffect(() => {
+        if (mathermState && mathermState.mateState === "Optimal") {
+            setMathermToastMsg("Your mate is at optimal temperature and ready to drink")
+        }
+    }, [mathermState])
+
+    const saveMathermStateThingsbrd = async (currentMatherState?: MathermState) => {
+        if (currentMatherState) {
+            const isResistanceActive = !currentMatherState.resistanceState;
+            const temperature = +currentMatherState.screenMsg.substr(0, currentMatherState.screenMsg.indexOf(" "));
+            const mathermInputPayload: MathermInputPayload = {
+                temperature,
+                buttonState: isResistanceActive
+            };
+            const mathermStateRequest = await axios.post<MathermInputPayload, any>(
+                AppConfig.THINGSBOARD_BUTTON_DEVICE_ENDPOINT,
+                mathermInputPayload);
+            if (mathermStateRequest.status === 200) {
+                setMathermToastMsg(mathermInputPayload.buttonState ? "MaTherm resistance turned on" : "MaTherm resistance turned off");
+            }
+        }
+    };
 
     return (
         <IonPage>
-            {mathermState &&
+            {mathermState ?
             <React.Fragment>
+                <IonToast isOpen={!!mathermToastMsg} message={mathermToastMsg} duration={4000} position="top"
+                    onDidDismiss={() => setMathermToastMsg("")} color="dark"/>
                 <IonContent fullscreen>
                     <IonGrid>
                         <IonRow>
@@ -25,7 +54,7 @@ const Home: React.FC = () => {
                         </IonRow>
                         <IonRow>
                             <IonCol className="button-container ion-no-padding">
-                                <div className="switch-button">
+                                <div className="switch-button" onClick={() => saveMathermStateThingsbrd(mathermState)}>
                                     <IonIcon className={ mathermState?.resistanceState ? "heating-on" : ""}
                                         slot="icon-only" icon={powerOutline} />
                                 </div>
@@ -33,7 +62,7 @@ const Home: React.FC = () => {
                         </IonRow>
                     </IonGrid>
                 </IonContent>
-                <IonFooter>
+                <IonFooter className="ion-no-border">
                     <IonRow>
                         <IonCol className="ion-text-center">
                             <h4 className="resistance-state">{ mathermState?.resistanceState ? "MaTherm is heating your drink" : "MaTherm heating is not active"}</h4>
@@ -45,6 +74,23 @@ const Home: React.FC = () => {
                         </IonCol>
                     </IonRow>
                 </IonFooter>
+            </React.Fragment>
+            :
+            <React.Fragment>
+                <IonContent>
+                    <IonGrid>
+                        <IonRow className="no-matherm-state-img-container">
+                            <IonCol className="ion-text-center">
+                                <img className="no-matherm-state-img" src="/assets/images/void.svg" alt="Void"/>
+                            </IonCol>
+                        </IonRow>
+                        <IonRow>
+                            <IonCol className="ion-text-center">
+                                <h1 className="no-matherm-state-legend">There is no data from your MaThermSensor</h1>
+                            </IonCol>
+                        </IonRow>
+                    </IonGrid>
+                </IonContent>
             </React.Fragment>
             }
         </IonPage>
