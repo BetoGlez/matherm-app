@@ -9,9 +9,11 @@ import { AppConfig } from "../app.constants";
 
 const Home: React.FC = () => {
     const { mathermState } = useDatabase();
+    const [ isResistanceActive, setIsResistanceActive ] = useState<boolean>();
     const [ mathermToastMsg, setMathermToastMsg ] = useState("");
 
     useEffect(() => {
+        setIsResistanceActive(mathermState?.resistanceState);
         if (mathermState && mathermState.mateState === "Optimal") {
             setMathermToastMsg("Your mate is at optimal temperature and ready to drink")
         }
@@ -29,6 +31,7 @@ const Home: React.FC = () => {
                 AppConfig.THINGSBOARD_BUTTON_DEVICE_ENDPOINT,
                 mathermInputPayload);
             if (mathermStateRequest.status === 200) {
+                setIsResistanceActive(mathermInputPayload.buttonState);
                 setMathermToastMsg(mathermInputPayload.buttonState ? "MaTherm resistance turned on" : "MaTherm resistance turned off");
             }
         }
@@ -55,7 +58,7 @@ const Home: React.FC = () => {
                         <IonRow>
                             <IonCol className="button-container ion-no-padding">
                                 <div className="switch-button" onClick={() => saveMathermStateThingsbrd(mathermState)}>
-                                    <IonIcon className={ mathermState?.resistanceState ? "heating-on" : ""}
+                                    <IonIcon className={ isResistanceActive ? "heating-on" : ""}
                                         slot="icon-only" icon={powerOutline} />
                                 </div>
                             </IonCol>
@@ -65,7 +68,7 @@ const Home: React.FC = () => {
                 <IonFooter className="ion-no-border">
                     <IonRow>
                         <IonCol className="ion-text-center">
-                            <h4 className="resistance-state">{ mathermState?.resistanceState ? "MaTherm is heating your drink" : "MaTherm heating is not active"}</h4>
+                            <h4 className="resistance-state">{ isResistanceActive ? "MaTherm is heating your drink" : "MaTherm heating is not active"}</h4>
                         </IonCol>
                     </IonRow>
                     <IonRow>
@@ -81,7 +84,7 @@ const Home: React.FC = () => {
                     <IonGrid>
                         <IonRow className="no-matherm-state-img-container">
                             <IonCol className="ion-text-center">
-                                <img className="no-matherm-state-img" src="/assets/images/void.svg" alt="Void"/>
+                                <img className="no-matherm-state-img" src="/assets/images/Void.svg" alt="NoData"/>
                             </IonCol>
                         </IonRow>
                         <IonRow>
