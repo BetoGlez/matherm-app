@@ -33,6 +33,9 @@ const App: React.FC = () => {
             StatusBar.setStyle({
                 style: StatusBarStyle.Light
             });
+            StatusBar.setBackgroundColor({
+                color: "#2f2e41"
+            });
         }
     });
 

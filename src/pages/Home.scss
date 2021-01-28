@@ -3,7 +3,6 @@ ion-content {
 }
 
 .matherm-screen-message {
-    margin-top: 30px;
     h1 {
         margin: 0px;
         font-size: 60px;
@@ -70,13 +69,6 @@ ion-content {
     opacity: 0.7;
     color: #2f2e41;
     font-weight: 200;
-    margin-bottom: 40px;
-}
-
-@media screen and (max-height: 620px) {
-  .resistance-state {
-      margin-bottom: 20px;
-  }
 }
 
 .image-state {
@@ -98,9 +90,12 @@ ion-content {
     }
 }
 
-@media screen and (max-height: 570px) {
+@media screen and (max-height: 580px) {
     .matherm-screen-message {
-        margin-top: 10px;
+        margin-top: 30px;
+    }
+    .resistance-state {
+        margin-bottom: 20px;
     }
     .image-state {
         height: 160px;
@@ -108,10 +103,47 @@ ion-content {
             height: 150px;
         }
     }
-    .no-matherm-state-img-container {
-        margin-top: 20%;
-        .no-matherm-state-img {
-            height: 210px;
+}
+@media screen and (min-height: 581px) and (max-height: 700px) {
+    .matherm-screen-message {
+        margin-top: 40px;
+    }
+    .resistance-state {
+        margin-bottom: 25px;
+    }
+    .image-state {
+        height: 200px;
+        img {
+            height: 190px;
         }
     }
 }
+@media screen and (min-height: 701px) and (max-height: 850px) {
+    .matherm-screen-message {
+        margin-top: 90px;
+    }
+    .resistance-state {
+        margin-bottom: 30px;
+    }
+    .image-state {
+        height: 260px;
+        img {
+            height: 250px;
+        }
+    }
+}
+@media screen and (min-height: 851px){
+    .matherm-screen-message {
+        margin-top: 110px;
+    }
+    .resistance-state {
+        margin-bottom: 35px;
+    }
+    .image-state {
+        height: 290px;
+        img {
+            height: 280px;
+        }
+    }
+}
+
