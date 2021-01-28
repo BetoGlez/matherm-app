@@ -40,19 +40,24 @@ ion-content {
         opacity: 0.5;
         .switch-button {
             ion-icon {
-                font-size: 97px;
+                font-size: 77px;
             }
         }
     }
     .switch-button {
-        width: 130px;
-        height: 130px;
+        border: 0.5px solid #2f2e413c;
+        &.heating-on {
+            border: 0.5px solid #ff406662;
+        }
+        border-radius: 100px;
+        width: 110px;
+        height: 110px;
         display: flex;
         justify-content: center;
         align-items: center;
         ion-icon {
             transition: all 0.2s;
-            font-size: 100px;
+            font-size: 80px;
             color: #2f2e41;
             &.heating-on {
                 color: #FF4067;

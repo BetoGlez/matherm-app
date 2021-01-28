@@ -37,17 +37,24 @@ const Home: React.FC = () => {
         }
     };
 
+    const composeScreenMsg = (screenMsg?: string) => {
+        if (screenMsg) {
+            const temperature = +screenMsg.substr(0, screenMsg.indexOf(" "));
+            return `${temperature.toFixed(1)} ºC`;
+        }
+    };
+
     return (
         <IonPage>
             {mathermState ?
             <React.Fragment>
-                <IonToast isOpen={!!mathermToastMsg} message={mathermToastMsg} duration={4000} position="top"
+                <IonToast isOpen={!!mathermToastMsg} message={mathermToastMsg} duration={2000} position="top"
                     onDidDismiss={() => setMathermToastMsg("")} color="dark"/>
                 <IonContent fullscreen>
                     <IonGrid>
                         <IonRow>
                             <IonCol className="ion-text-center matherm-screen-message">
-                                <h1>{ mathermState?.screenMsg }</h1>
+                                <h1>{ composeScreenMsg(mathermState?.screenMsg) }</h1>
                             </IonCol>
                         </IonRow>
                         <IonRow>
@@ -57,7 +64,7 @@ const Home: React.FC = () => {
                         </IonRow>
                         <IonRow>
                             <IonCol className="button-container ion-no-padding">
-                                <div className="switch-button" onClick={() => saveMathermStateThingsbrd(mathermState)}>
+                                <div className={ isResistanceActive ? "switch-button heating-on" : "switch-button" } onClick={() => saveMathermStateThingsbrd(mathermState)}>
                                     <IonIcon className={ isResistanceActive ? "heating-on" : ""}
                                         slot="icon-only" icon={powerOutline} />
                                 </div>
